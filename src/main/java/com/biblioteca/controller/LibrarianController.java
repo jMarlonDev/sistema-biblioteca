@@ -1,5 +1,5 @@
 package com.biblioteca.controller;
 
-public class BibliotecarioController {
+public class LibrarianController {
 
 }

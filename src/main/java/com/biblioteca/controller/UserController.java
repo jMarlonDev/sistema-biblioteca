@@ -1,5 +1,5 @@
 package com.biblioteca.controller;
 
-public class UsuarioController {
+public class UserController {
 
 }
