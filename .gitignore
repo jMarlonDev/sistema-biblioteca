@@ -1,0 +1,20 @@
+# Maven
+target/
+
+# VSCode
+.vscode/
+
+# Compiled files
+*.class
+
+# Logs
+*.log
+
+# SQLite database
+*.db
+
+nbprojects/
+
+# OS files
+.DS_Store
+Thumbs.db
