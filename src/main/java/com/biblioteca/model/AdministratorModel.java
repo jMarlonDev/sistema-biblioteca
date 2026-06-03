@@ -1,8 +1,8 @@
-package com.biblioteca.Datos;
+package com.biblioteca.model;
 
-public class Administrador {
+public class AdministratorModel {
 
-    public Administrador(int id, String cedula, String nom) {
+    public AdministratorModel(int id, String cedula, String nom) {
 
     }
 

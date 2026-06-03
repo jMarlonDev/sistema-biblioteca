@@ -1,5 +1,5 @@
 package com.biblioteca.model;
 
-public class Usuario {
+public class UserModel {
 
 }

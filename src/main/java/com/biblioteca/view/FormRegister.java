@@ -1,5 +1,5 @@
 package com.biblioteca.view;
 
-public class FormRegistrarse {
+public class FormRegister {
 
 }

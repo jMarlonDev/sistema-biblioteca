@@ -1,5 +1,5 @@
 package com.biblioteca.model;
 
-public class Bibliotecario {
+public class LibrarianModel {
 
 }
