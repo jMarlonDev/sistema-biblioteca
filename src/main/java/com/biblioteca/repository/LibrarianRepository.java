@@ -14,7 +14,11 @@ public interface LibrarianRepository {
 
     Librarian findByIdentification(String identification);
 
+    Librarian findByEmail(String email);
+
     List<Librarian> findAll();
 
     boolean existsByIdentification(String identification);
+
+    boolean existsByEmail(String email);
 }
