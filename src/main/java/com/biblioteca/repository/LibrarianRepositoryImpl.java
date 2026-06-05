@@ -110,6 +110,27 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
     }
 
     @Override
+    public Librarian findByEmail(String email) {
+        String sql = "SELECT * FROM Librarian WHERE email = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToLibrarian(rs);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching for librarian email", e);
+        }
+
+        return null;
+
+    }
+
+    @Override
     public List<Librarian> findAll() {
         List<Librarian> listLibrarians = new ArrayList<>();
 
@@ -142,7 +163,30 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error checking if a librarian exists", e);
+            throw new RuntimeException("Error checking if the librarian's identification exists", e);
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public boolean existsByEmail(String email) {
+
+        String sql = "SELECT COUNT(*) FROM Librarian WHERE email = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if the librarian's email exists", e);
         }
 
         return false;
