@@ -12,9 +12,8 @@ public class MainWindow extends JFrame {
         this.setLocationRelativeTo(null);
         this.setLayout(new GridBagLayout());
 
-        FormLogin formLogin = new FormLogin();
-
-        this.add(formLogin);
+        // FormLogin formLogin = new FormLogin();
+        // this.add(formLogin);
         this.setSize(1200, 600);
         this.setVisible(true);
     }
