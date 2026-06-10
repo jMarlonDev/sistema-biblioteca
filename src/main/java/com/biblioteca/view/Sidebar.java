@@ -35,7 +35,7 @@ public class Sidebar extends JPanel {
             btn.setFont(new Font("Arial", Font.BOLD, 14));
             btn.setHorizontalAlignment(JButton.LEFT);
 
-            btn.addActionListener((e) -> {
+            btn.addActionListener(( e ) -> {
                 System.out.println("Click en: " + option);
             });
 
