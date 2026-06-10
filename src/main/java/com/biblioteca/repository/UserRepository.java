@@ -10,15 +10,13 @@ public interface UserRepository {
 
     void update(User user);
 
-    void delete(String identification);
-
-    User findByIdentification(String identification);
+    void delete(String email);
 
     User findByEmail(String email);
 
-    List<User> findAll();
+    User findById(int id);
 
-    boolean existsByIdentification(String identification);
+    List<User> findAll();
 
     boolean existsByEmail(String email);
 }

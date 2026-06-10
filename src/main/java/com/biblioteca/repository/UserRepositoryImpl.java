@@ -17,38 +17,29 @@ public class UserRepositoryImpl implements UserRepository {
         this.connection = connection;
     }
 
-    private User mapResultSetToUser(ResultSet rs)
-            throws SQLException {
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
 
         User user = new User();
 
-        user.setIdentification(
-                rs.getString("identification"));
-
-        user.setName(
-                rs.getString("name"));
-
-        user.setLastname(
-                rs.getString("lastname"));
-
-        user.setEmail(
-                rs.getString("email"));
+        user.setIdUser(rs.getInt("idUser"));
+        user.setName(rs.getString("name"));
+        user.setLastname(rs.getString("lastname"));
+        user.setPhone(rs.getString("phone"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        user.setIdentification(rs.getString("identification"));
 
         return user;
     }
 
     @Override
     public void save(User user) {
-
-        String sql = "INSERT INTO `User` (identification, name, lastname, phone, email, password) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `User` (name, email, password) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, user.getIdentification());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getLastname());
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getEmail());
-            ps.setString(6, user.getPassword());
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -58,15 +49,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        String sql = "UPDATE `User` SET name = ?, lastname = ?, phone = ?, email = ?, password = ? WHERE identification = ?";
+        String sql = "UPDATE `User` SET name = ?, lastname = ?, phone = ?, identification = ?, password = ? WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getLastname());
             ps.setString(3, user.getPhone());
-            ps.setString(4, user.getEmail());
+            ps.setString(4, user.getIdentification());
             ps.setString(5, user.getPassword());
-            ps.setString(6, user.getIdentification());
+            ps.setString(6, user.getEmail());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -75,33 +66,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(String identification) {
-        String sql = "DELETE FROM `User` WHERE identification = ?";
+    public void delete(String email) {
+        String sql = "DELETE FROM `User` WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identification);
+            ps.setString(1, email);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting user", e);
         }
-    }
-
-    @Override
-    public User findByIdentification(String identification) {
-        String sql = "SELECT * FROM `User` WHERE identification = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identification);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return mapResultSetToUser(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching for user by identification", e);
-        }
-
-        return null;
     }
 
     @Override
@@ -116,9 +89,27 @@ public class UserRepositoryImpl implements UserRepository {
                 return mapResultSetToUser(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error searching for user by email", e);
+            throw new RuntimeException("Error searching user by email", e);
         }
 
+        return null;
+    }
+
+    @Override
+    public User findById(int id) {
+        String sql = "SELECT * FROM `User` WHERE idUser = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching user by id", e);
+        }
         return null;
     }
 
@@ -141,39 +132,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean existsByIdentification(String identification) {
-        String sql = "SELECT COUNT(*) FROM `User` WHERE identification = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identification);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error verifying user by identification", e);
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean existsByEmail(String email) {
         String sql = "SELECT COUNT(*) FROM `User` WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error verifying user by email", e);
+            throw new RuntimeException("Error checking user email", e);
         }
 
         return false;
     }
-
 }
