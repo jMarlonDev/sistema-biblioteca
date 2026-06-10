@@ -17,37 +17,29 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
         this.connection = connection;
     }
 
-    private Librarian mapResultSetToLibrarian(ResultSet rs)
-            throws SQLException {
-
+    private Librarian mapResultSetToLibrarian(ResultSet rs) throws SQLException {
         Librarian librarian = new Librarian();
 
-        librarian.setIdentification(
-                rs.getString("identification"));
-
-        librarian.setName(
-                rs.getString("name"));
-
-        librarian.setLastname(
-                rs.getString("lastname"));
-
-        librarian.setEmail(
-                rs.getString("email"));
+        librarian.setIdLibrarian(rs.getInt("idLibrarian"));
+        librarian.setName(rs.getString("name"));
+        librarian.setLastname(rs.getString("lastname"));
+        librarian.setPhone(rs.getString("phone"));
+        librarian.setEmail(rs.getString("email"));
+        librarian.setPassword(rs.getString("password"));
+        librarian.setIdentification(rs.getString("identification"));
 
         return librarian;
     }
 
     @Override
     public void save(Librarian librarian) {
-        String sql = "INSERT INTO Librarian (identification, name, lastname, phone , email, password) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Librarian (name, email, password) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, librarian.getIdentification());
-            ps.setString(2, librarian.getName());
-            ps.setString(3, librarian.getLastname());
-            ps.setString(4, librarian.getPhone());
-            ps.setString(5, librarian.getEmail());
-            ps.setString(6, librarian.getPassword());
+
+            ps.setString(1, librarian.getName());
+            ps.setString(2, librarian.getEmail());
+            ps.setString(3, librarian.getPassword());
 
             ps.executeUpdate();
 
@@ -58,55 +50,33 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
 
     @Override
     public void update(Librarian librarian) {
-        String sql = "UPDATE Librarian SET name = ?, lastname = ?, phone = ?, email = ?, password = ? WHERE identification = ?";
+        String sql = "UPDATE Librarian SET name = ?, lastname = ?, phone = ?, identification = ?, password = ? WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, librarian.getName());
             ps.setString(2, librarian.getLastname());
             ps.setString(3, librarian.getPhone());
-            ps.setString(4, librarian.getEmail());
+            ps.setString(4, librarian.getIdentification());
             ps.setString(5, librarian.getPassword());
-            ps.setString(6, librarian.getIdentification());
+            ps.setString(6, librarian.getEmail());
 
             ps.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating a librarian", e);
+            throw new RuntimeException("Error updating librarian", e);
         }
     }
 
     @Override
-    public void delete(String identification) {
-        String sql = "DELETE FROM Librarian WHERE identification = ?";
+    public void delete(String email) {
+        String sql = "DELETE FROM Librarian WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identification);
+            ps.setString(1, email);
             ps.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting a library", e);
+            throw new RuntimeException("Error deleting librarian", e);
         }
-    }
-
-    @Override
-    public Librarian findByIdentification(String identification) {
-        String sql = "SELECT * FROM Librarian WHERE identification = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identification);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return mapResultSetToLibrarian(rs);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching for librarian identification", e);
-        }
-
-        return null;
     }
 
     @Override
@@ -114,8 +84,8 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
         String sql = "SELECT * FROM Librarian WHERE email = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, email);
 
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -123,11 +93,26 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error searching for librarian email", e);
+            throw new RuntimeException("Error searching librarian by email", e);
         }
-
         return null;
+    }
 
+    @Override
+    public Librarian findById(int id) {
+        String sql = "SELECT * FROM Librarian WHERE idLibrarian = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToLibrarian(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching librarian by id", e);
+        }
+        return null;
     }
 
     @Override
@@ -147,28 +132,6 @@ public class LibrarianRepositoryImpl implements LibrarianRepository {
 
         return listLibrarians;
     }
-
-    @Override
-    public boolean existsByIdentification(String identification) {
-        String sql = "SELECT COUNT(*) FROM Librarian WHERE identification = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, identification);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Error checking if the librarian's identification exists", e);
-        }
-
-        return false;
-    }
-
 
     @Override
     public boolean existsByEmail(String email) {

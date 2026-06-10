@@ -10,15 +10,13 @@ public interface LibrarianRepository {
 
     void update(Librarian librarian);
 
-    void delete(String identification);
-
-    Librarian findByIdentification(String identification);
+    void delete(String email);
 
     Librarian findByEmail(String email);
 
-    List<Librarian> findAll();
+    Librarian findById(int id);
 
-    boolean existsByIdentification(String identification);
+    List<Librarian> findAll();
 
     boolean existsByEmail(String email);
 }
