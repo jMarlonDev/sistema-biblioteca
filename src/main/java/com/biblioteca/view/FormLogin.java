@@ -9,9 +9,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class FormLogin extends JPanel {
+
+    private JTextField inputEmail;
+    private JPasswordField inputPassword;
+    private JButton btnSubmit;
+    private JLabel errorMessage;
+    private JLabel goToRegister;
 
     public FormLogin() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -21,48 +28,78 @@ public class FormLogin extends JPanel {
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setFont(new Font("Arial", Font.BOLD, 50));
 
-        JLabel email = new JLabel("Your e-mail");
-        email.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel lblEmail = new JLabel("Your e-mail");
+        lblEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JTextField inputEmail = new JTextField();
-
+        inputEmail = new JTextField();
         inputEmail.setMaximumSize(new Dimension(200, 30));
         inputEmail.setPreferredSize(new Dimension(200, 30));
 
-        JLabel password = new JLabel("Your password");
-        password.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel lblPassword = new JLabel("Your password");
+        lblPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JTextField inputPassword = new JTextField();
+        inputPassword = new JPasswordField();
         inputPassword.setMaximumSize(new Dimension(200, 30));
         inputPassword.setPreferredSize(new Dimension(200, 30));
 
-        JLabel createdAccount = new JLabel();
-        createdAccount.setText("Do not have an account? Create one");
-        createdAccount.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorMessage = new JLabel("");
+        errorMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorMessage.setForeground(java.awt.Color.RED);
+        errorMessage.setFont(new Font("Arial", Font.PLAIN, 11));
 
-        JButton btn = new JButton("Continuar");
+        goToRegister = new JLabel("Do not have an account? Create one");
+        goToRegister.setAlignmentX(Component.CENTER_ALIGNMENT);
+        goToRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btn.setFocusPainted(false);
-        btn.setMaximumSize(new Dimension(150, 30));
-        btn.setPreferredSize(new Dimension(150, 30));
+        btnSubmit = new JButton("Login");
+        btnSubmit.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSubmit.setFocusPainted(false);
+        btnSubmit.setMaximumSize(new Dimension(150, 30));
+        btnSubmit.setPreferredSize(new Dimension(150, 30));
 
         this.add(Box.createVerticalGlue());
         this.add(title);
         this.add(Box.createRigidArea(new Dimension(0, 50)));
-        this.add(email);
+        this.add(lblEmail);
         this.add(Box.createRigidArea(new Dimension(0, 5)));
         this.add(inputEmail);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
-        this.add(password);
+        this.add(lblPassword);
         this.add(Box.createRigidArea(new Dimension(0, 5)));
         this.add(inputPassword);
-        this.add(Box.createRigidArea(new Dimension(0, 45)));
-        this.add(createdAccount);
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.add(errorMessage);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
-        this.add(btn);
+        this.add(goToRegister);
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
+        this.add(btnSubmit);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(Box.createVerticalGlue());
+    }
 
+    public String getEmail() {
+        return inputEmail.getText().trim();
+    }
+
+    public String getPassword() {
+        return new String(inputPassword.getPassword()).trim();
+    }
+
+    public JButton getBtnSubmit() {
+        return btnSubmit;
+    }
+
+    public JLabel getGoToRegister() {
+        return goToRegister;
+    }
+
+    public void showError(String message) {
+        errorMessage.setText(message);
+    }
+
+    public void clearFields() {
+        inputEmail.setText("");
+        inputPassword.setText("");
+        errorMessage.setText("");
     }
 }
