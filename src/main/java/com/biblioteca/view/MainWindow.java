@@ -14,8 +14,11 @@ public class MainWindow extends JFrame {
     public static final String VISTA_LIBRARIAN = "librarian";
     public static final String VISTA_USER = "user";
 
-    private CardLayout viewDesign;
-    private JPanel mainContainer;
+    private final CardLayout viewDesign;
+    private final JPanel mainContainer;
+
+    private final FormLogin formLogin;
+    private final FormRegister formRegister;
 
     public MainWindow() {
         this.setTitle("Library");
@@ -27,18 +30,28 @@ public class MainWindow extends JFrame {
         viewDesign = new CardLayout();
         mainContainer = new JPanel(viewDesign);
 
-        //mainContainer.add(new FormLogin(), VISTA_LOGIN);
-        //mainContainer.add(new MenuAdministrator(), VISTA_ADMIN);
-        //mainContainer.add(new MenuLibrarian(), VISTA_LIBRARIAN);
-        //mainContainer.add(new FormRegister(), VISTA_REGISTER);
-        mainContainer.add(new UserMenu(), VISTA_LIBRARIAN);
+        formLogin = new FormLogin();
+        formRegister = new FormRegister();
+
+        mainContainer.add(formLogin, VISTA_LOGIN);
+        mainContainer.add(formRegister, VISTA_REGISTER);
+        mainContainer.add(new MenuAdministrator(), VISTA_ADMIN);
+        mainContainer.add(new MenuLibrarian(), VISTA_LIBRARIAN);
+        mainContainer.add(new UserMenu(), VISTA_USER);
 
         this.add(mainContainer, BorderLayout.CENTER);
-
         this.setVisible(true);
     }
 
     public void showView(String nameView) {
         viewDesign.show(mainContainer, nameView);
+    }
+
+    public FormLogin getFormLogin() {
+        return formLogin;
+    }
+
+    public FormRegister getFormRegister() {
+        return formRegister;
     }
 }
