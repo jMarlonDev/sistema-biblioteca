@@ -2,6 +2,7 @@ package com.biblioteca.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -11,6 +12,7 @@ public class MainWindow extends JFrame {
     public static final String VISTA_REGISTER = "register";
     public static final String VISTA_ADMIN = "admin";
     public static final String VISTA_LIBRARIAN = "librarian";
+    public static final String VISTA_USER = "user";
 
     private CardLayout viewDesign;
     private JPanel mainContainer;
@@ -27,8 +29,9 @@ public class MainWindow extends JFrame {
 
         //mainContainer.add(new FormLogin(), VISTA_LOGIN);
         //mainContainer.add(new MenuAdministrator(), VISTA_ADMIN);
-        mainContainer.add(new MenuLibrarian(), VISTA_LIBRARIAN);
+        //mainContainer.add(new MenuLibrarian(), VISTA_LIBRARIAN);
         //mainContainer.add(new FormRegister(), VISTA_REGISTER);
+        mainContainer.add(new UserMenu(), VISTA_LIBRARIAN);
 
         this.add(mainContainer, BorderLayout.CENTER);
 
