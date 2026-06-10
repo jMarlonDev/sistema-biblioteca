@@ -1,5 +1,11 @@
 package com.biblioteca.repository;
 
-public class AdministratorRepository {
+import com.biblioteca.entity.Administrator;
+
+public interface AdministratorRepository {
+
+    Administrator findByEmail(String email);
+
+    boolean existsByEmail(String email);
 
 }
