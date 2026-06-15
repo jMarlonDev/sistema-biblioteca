@@ -18,9 +18,9 @@ public class MenuLibrarian extends JPanel {
         this.setPreferredSize(new Dimension(1200, 600));
 
         NavBar navbar = new NavBar("Librarian");
-        Sidebar sidebar = new Sidebar(librarianOptions);
+        // Sidebar sidebar = new Sidebar(librarianOptions);
         this.add(navbar, BorderLayout.NORTH);
-        this.add(sidebar, BorderLayout.WEST);
+        // this.add(sidebar, BorderLayout.WEST);
     }
 
 }

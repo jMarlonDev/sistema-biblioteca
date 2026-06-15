@@ -18,10 +18,10 @@ public class UserMenu extends JPanel {
         this.setPreferredSize(new Dimension(1200, 600));
 
         NavBar navbar = new NavBar("User");
-        Sidebar sidebar = new Sidebar(userOptions);
+        //  Sidebar sidebar = new Sidebar(userOptions);
 
         this.add(navbar, BorderLayout.NORTH);
-        this.add(sidebar, BorderLayout.WEST);
+        // this.add(sidebar, BorderLayout.WEST);
     }
 
 }
