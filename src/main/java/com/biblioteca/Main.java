@@ -5,12 +5,14 @@ import java.sql.Connection;
 import javax.swing.SwingUtilities;
 
 import com.biblioteca.config.ConnectionDB;
+import com.biblioteca.controller.BookController;
 import com.biblioteca.controller.LibrarianController;
 import com.biblioteca.controller.LoanController;
 import com.biblioteca.controller.LoginController;
 import com.biblioteca.controller.RegisterController;
 import com.biblioteca.controller.ReportController;
 import com.biblioteca.controller.UserController;
+import com.biblioteca.model.BookModel;
 import com.biblioteca.model.LibrarianModel;
 import com.biblioteca.model.LoanModel;
 import com.biblioteca.model.LoginModel;
@@ -23,6 +25,7 @@ import com.biblioteca.repository.LibrarianRepositoryImpl;
 import com.biblioteca.repository.LoanRepositoryImpl;
 import com.biblioteca.repository.ReportRepositoryImpl;
 import com.biblioteca.repository.UserRepositoryImpl;
+import com.biblioteca.view.BookManagementView;
 import com.biblioteca.view.LibrarianManagementView;
 import com.biblioteca.view.LoanManagementView;
 import com.biblioteca.view.MainWindow;
@@ -50,6 +53,7 @@ public class Main {
 
             LibrarianModel librarianModel = new LibrarianModel(librarianRepo);
             UserModel userModel = new UserModel(userRepo);
+            BookModel bookModel = new BookModel(bookRepo);
             LoanModel loanModel = new LoanModel(loanRepo, bookRepo, userRepo);
             ReportModel reportModel = new ReportModel(reportRepo);
 
@@ -63,16 +67,20 @@ public class Main {
             new UserController(adminUserView, userModel);
             mainWindow.getMenuAdministrator().addContentPanel(adminUserView, "Manage Users");
 
-            LoanManagementView loanView = new LoanManagementView();
-            ReturnManagementView returnView = new ReturnManagementView();
-            LoanController loanController = new LoanController(loanView, returnView, loanModel);
-            mainWindow.getMenuAdministrator().addContentPanel(loanView, "Manage Loans");
-            mainWindow.getMenuAdministrator().addContentPanel(returnView, "Manage Returns");
+            LoanManagementView adminLoanView = new LoanManagementView();
+            ReturnManagementView adminReturnView = new ReturnManagementView();
+            LoanController adminLoanController = new LoanController(adminLoanView, adminReturnView, loanModel);
+            mainWindow.getMenuAdministrator().addContentPanel(adminLoanView, "Manage Loans");
+            mainWindow.getMenuAdministrator().addContentPanel(adminReturnView, "Manage Returns");
 
-            ReportManagementView reportView = new ReportManagementView();
-            ReportController reportController = new ReportController(reportView, reportModel);
-            mainWindow.getMenuAdministrator().addContentPanel(reportView, "System Reports");
-            loanController.setReportController(reportController);
+            ReportManagementView adminReportView = new ReportManagementView();
+            ReportController adminReportController = new ReportController(adminReportView, reportModel);
+            mainWindow.getMenuAdministrator().addContentPanel(adminReportView, "System Reports");
+            adminLoanController.setReportController(adminReportController);
+
+            BookManagementView bookView = new BookManagementView();
+            new BookController(bookView, bookModel);
+            mainWindow.getMenuLibrarian().addContentPanel(bookView, MenuLibrarian.OPT_BOOKS);
 
             UserManagementView librarianUserView = new UserManagementView();
             new UserController(librarianUserView, userModel);
@@ -83,7 +91,12 @@ public class Main {
             LoanController libLoanController = new LoanController(libLoanView, libReturnView, loanModel);
             mainWindow.getMenuLibrarian().addContentPanel(libLoanView, MenuLibrarian.OPT_LOANS);
             mainWindow.getMenuLibrarian().addContentPanel(libReturnView, MenuLibrarian.OPT_RETURNS);
-            libLoanController.setReportController(reportController);
+
+            ReportManagementView libReportView = new ReportManagementView();
+            ReportController libReportController = new ReportController(libReportView, reportModel);
+            mainWindow.getMenuLibrarian().addContentPanel(libReportView, MenuLibrarian.OPT_REPORTS);
+
+            libLoanController.setReportController(libReportController);
 
             new LoginController(
                     mainWindow.getFormLogin(),
