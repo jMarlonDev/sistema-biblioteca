@@ -1,26 +1,47 @@
 package com.biblioteca.view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
 public class MenuLibrarian extends JPanel {
 
-    private String[] librarianOptions = {
-        "Check Book Availability",
-        "Lend Book",
-        "Book Return"
+    public static final String OPT_USERS = "Manage Users";
+    public static final String OPT_LOANS = "Lend Book";
+    public static final String OPT_RETURNS = "Book Return";
+
+    private final String[] librarianOptions = {
+        OPT_USERS,
+        OPT_LOANS,
+        OPT_RETURNS
     };
+
+    private final CardLayout cardLayout;
+    private final JPanel contentContainer;
 
     public MenuLibrarian() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(1200, 600));
 
         NavBar navbar = new NavBar("Librarian");
-        // Sidebar sidebar = new Sidebar(librarianOptions);
+
+        cardLayout = new CardLayout();
+        contentContainer = new JPanel(cardLayout);
+
+        Sidebar sidebar = new Sidebar(librarianOptions, this::showContent);
+
         this.add(navbar, BorderLayout.NORTH);
-        // this.add(sidebar, BorderLayout.WEST);
+        this.add(sidebar, BorderLayout.WEST);
+        this.add(contentContainer, BorderLayout.CENTER);
     }
 
+    public void addContentPanel(JPanel panel, String name) {
+        contentContainer.add(panel, name);
+    }
+
+    public void showContent(String name) {
+        cardLayout.show(contentContainer, name);
+    }
 }
