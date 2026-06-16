@@ -19,4 +19,6 @@ public interface UserRepository {
     List<User> findAll();
 
     boolean existsByEmail(String email);
+
+    boolean hasActiveLoans(String email); // ← nuevo
 }

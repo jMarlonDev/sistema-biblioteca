@@ -36,4 +36,8 @@ public class UserModel {
     public User findByEmail(String email) {
         return repository.findByEmail(email);
     }
+
+    public boolean hasActiveLoans(String email) {
+        return repository.hasActiveLoans(email);
+    }
 }

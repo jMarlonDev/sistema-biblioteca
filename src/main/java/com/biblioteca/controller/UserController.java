@@ -124,16 +124,44 @@ public class UserController {
 
     private void deleteUser() {
         String email = view.getTxtEmail().getText().trim();
+
         if (email.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Please select a user from the table.");
+            JOptionPane.showMessageDialog(
+                    view,
+                    "Please select a user from the table.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this user?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (model.hasActiveLoans(email)) {
+            JOptionPane.showMessageDialog(
+                    view,
+                    "Cannot delete this user because they have active loans.\n"
+                    + "Please process the return of all books first.",
+                    "Delete Not Allowed",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+                view,
+                "Are you sure you want to delete this user?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
 
         if (confirm == JOptionPane.YES_OPTION) {
             model.deleteUser(email);
-            JOptionPane.showMessageDialog(view, "User deleted successfully!");
+            JOptionPane.showMessageDialog(
+                    view,
+                    "User deleted successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
             loadTableData();
             clearFields();
         }

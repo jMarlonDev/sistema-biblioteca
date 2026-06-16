@@ -147,4 +147,22 @@ public class UserRepositoryImpl implements UserRepository {
 
         return false;
     }
+
+    @Override
+    public boolean hasActiveLoans(String email) {
+        String sql = "SELECT COUNT(*) FROM Loan l "
+                + "INNER JOIN `User` u ON l.idUser = u.idUser "
+                + "WHERE u.email = ? AND l.state = 'active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking active loans", e);
+        }
+        return false;
+    }
 }
