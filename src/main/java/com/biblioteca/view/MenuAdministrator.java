@@ -10,7 +10,7 @@ public class MenuAdministrator extends JPanel {
 
     private String[] adminOptions = {
         "Manage Librarians", "Manage Users", "Manage Loans",
-        "Manage Returns", "Loan Reports", "Overdue Reports"
+        "Manage Returns", "System Reports"
     };
 
     private final CardLayout contentLayout;
