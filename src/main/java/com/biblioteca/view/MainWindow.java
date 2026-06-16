@@ -20,6 +20,7 @@ public class MainWindow extends JFrame {
     private final FormLogin formLogin;
     private final FormRegister formRegister;
     private final MenuAdministrator menuAdministrator;
+    private final MenuLibrarian menuLibrarian;
 
     public MainWindow() {
         this.setTitle("Library");
@@ -34,11 +35,12 @@ public class MainWindow extends JFrame {
         formLogin = new FormLogin();
         formRegister = new FormRegister();
         menuAdministrator = new MenuAdministrator();
+        menuLibrarian = new MenuLibrarian();
 
         mainContainer.add(formLogin, VISTA_LOGIN);
         mainContainer.add(formRegister, VISTA_REGISTER);
         mainContainer.add(menuAdministrator, VISTA_ADMIN);
-        mainContainer.add(new MenuLibrarian(), VISTA_LIBRARIAN);
+        mainContainer.add(menuLibrarian, VISTA_LIBRARIAN);
         mainContainer.add(new UserMenu(), VISTA_USER);
 
         this.add(mainContainer, BorderLayout.CENTER);
@@ -59,5 +61,9 @@ public class MainWindow extends JFrame {
 
     public MenuAdministrator getMenuAdministrator() {
         return menuAdministrator;
+    }
+
+    public MenuLibrarian getMenuLibrarian() {
+        return menuLibrarian;
     }
 }
