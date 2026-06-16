@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,98 +18,81 @@ public class ReportRepositoryImpl implements ReportRepository {
         this.connection = connection;
     }
 
-    private Report mapResultSetToReport(ResultSet rs) throws SQLException {
+    @Override
+    public Report calculateCurrentMetrics() {
         Report report = new Report();
-        report.setIdReport(rs.getInt("idReport"));
-        report.setReportDate(rs.getString("report_date"));
-        report.setTotalLoans(rs.getInt("total_loans"));
-        report.setReturnedBooks(rs.getInt("returned_books"));
-        report.setOverdueBooks(rs.getInt("overdue_books"));
+
+        String sqlTotal = "SELECT COUNT(*) FROM Loan";
+        String sqlReturned = "SELECT COUNT(*) FROM Loan WHERE state = 'returned'";
+
+        String sqlOverdue = "SELECT COUNT(*) FROM Loan "
+                + "WHERE state = 'active' "
+                + "AND DATEDIFF(CURRENT_DATE, loan_date) > 14";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(sqlTotal); ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    report.setTotalLoans(rs.getInt(1));
+                }
+            }
+            try (PreparedStatement ps = connection.prepareStatement(sqlReturned); ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    report.setReturnedBooks(rs.getInt(1));
+                }
+            }
+            try (PreparedStatement ps = connection.prepareStatement(sqlOverdue); ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    report.setOverdueBooks(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error calculating loan metrics", e);
+        }
 
         return report;
     }
 
     @Override
     public void save(Report report) {
-        String sql = "INSERT INTO Report (report_date, total_loans, returned_books, overdue_books) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Report (report_date, total_loans, returned_books, overdue_books) "
+                + "VALUES (CURRENT_DATE, ?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, report.getReportDate());
-            ps.setInt(2, report.getTotalLoans());
-            ps.setInt(3, report.getReturnedBooks());
-            ps.setInt(4, report.getOverdueBooks());
-
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, report.getTotalLoans());
+            ps.setInt(2, report.getReturnedBooks());
+            ps.setInt(3, report.getOverdueBooks());
             ps.executeUpdate();
 
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    report.setIdReport(keys.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error saving report", e);
         }
     }
 
     @Override
-    public void update(Report report) {
-        String sql = "UPDATE Report SET report_date = ?, total_loans = ?, returned_books = ?, overdue_books = ? WHERE idReport = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, report.getReportDate());
-            ps.setInt(2, report.getTotalLoans());
-            ps.setInt(3, report.getReturnedBooks());
-            ps.setInt(4, report.getOverdueBooks());
-            ps.setInt(5, report.getIdReport());
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error updating report", e);
-        }
-    }
-
-    @Override
-    public void delete(int idReport) {
-        String sql = "DELETE FROM Report WHERE idReport = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, idReport);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting report", e);
-        }
-    }
-
-    @Override
-    public Report findById(int idReport) {
-        String sql = "SELECT * FROM Report WHERE idReport = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, idReport);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return mapResultSetToReport(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching for a report", e);
-        }
-
-        return null;
-    }
-
-    @Override
     public List<Report> findAll() {
-        List<Report> listReports = new ArrayList<>();
-
-        String sql = "SELECT * FROM Loan";
+        List<Report> list = new ArrayList<>();
+        String sql = "SELECT idReport, report_date, total_loans, returned_books, overdue_books "
+                + "FROM Report ORDER BY report_date DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                listReports.add(mapResultSetToReport(rs));
+                Report r = new Report();
+                r.setIdReport(rs.getInt("idReport"));
+                r.setReportDate(rs.getString("report_date"));
+                r.setTotalLoans(rs.getInt("total_loans"));
+                r.setReturnedBooks(rs.getInt("returned_books"));
+                r.setOverdueBooks(rs.getInt("overdue_books"));
+                list.add(r);
             }
-
         } catch (SQLException e) {
-            throw new RuntimeException("Error listing all reports", e);
+            throw new RuntimeException("Error listing reports", e);
         }
 
-        return listReports;
+        return list;
     }
 }
