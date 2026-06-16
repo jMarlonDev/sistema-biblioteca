@@ -6,14 +6,9 @@ import com.biblioteca.entity.Report;
 
 public interface ReportRepository {
 
+    Report calculateCurrentMetrics();
+
     void save(Report report);
 
-    void update(Report report);
-
-    void delete(int idReport);
-
-    Report findById(int idReport);
-
     List<Report> findAll();
-
 }
