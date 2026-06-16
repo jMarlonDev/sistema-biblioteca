@@ -8,14 +8,18 @@ import javax.swing.JPanel;
 
 public class MenuLibrarian extends JPanel {
 
+    public static final String OPT_BOOKS = "Manage Books";
     public static final String OPT_USERS = "Manage Users";
     public static final String OPT_LOANS = "Lend Book";
     public static final String OPT_RETURNS = "Book Return";
+    public static final String OPT_REPORTS = "Loan Reports"; // ← nuevo
 
     private final String[] librarianOptions = {
+        OPT_BOOKS,
         OPT_USERS,
         OPT_LOANS,
-        OPT_RETURNS
+        OPT_RETURNS,
+        OPT_REPORTS // ← nuevo
     };
 
     private final CardLayout cardLayout;
