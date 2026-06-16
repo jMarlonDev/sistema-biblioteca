@@ -3,48 +3,48 @@ package com.biblioteca.entity;
 public class Report {
 
     private int idReport;
-    private String reportDate;      // Formato: "2026-06-05"
-    private int totalLoans;         // Total de préstamos registrados
-    private int returnedBooks;      // Libros devueltos
-    private int overdueBooks;       // Libros en mora
+    private String reportDate;
+    private int totalLoans;
+    private int returnedBooks;
+    private int overdueBooks;
 
     public int getIdReport() {
         return idReport;
     }
 
-    public void setIdReport(int idReport) {
-        this.idReport = idReport;
+    public void setIdReport(int v) {
+        this.idReport = v;
     }
 
     public String getReportDate() {
         return reportDate;
     }
 
-    public void setReportDate(String reportDate) {
-        this.reportDate = reportDate;
+    public void setReportDate(String v) {
+        this.reportDate = v;
     }
 
     public int getTotalLoans() {
         return totalLoans;
     }
 
-    public void setTotalLoans(int totalLoans) {
-        this.totalLoans = totalLoans;
+    public void setTotalLoans(int v) {
+        this.totalLoans = v;
     }
 
     public int getReturnedBooks() {
         return returnedBooks;
     }
 
-    public void setReturnedBooks(int returnedBooks) {
-        this.returnedBooks = returnedBooks;
+    public void setReturnedBooks(int v) {
+        this.returnedBooks = v;
     }
 
     public int getOverdueBooks() {
         return overdueBooks;
     }
 
-    public void setOverdueBooks(int overdueBooks) {
-        this.overdueBooks = overdueBooks;
+    public void setOverdueBooks(int v) {
+        this.overdueBooks = v;
     }
 }
