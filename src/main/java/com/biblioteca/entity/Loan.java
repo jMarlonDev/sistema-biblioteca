@@ -10,6 +10,7 @@ public class Loan {
     private String loanDate;
     private String returnDate;
     private String state;
+    private int daysActive;
 
     public int getIdLoan() {
         return idLoan;
@@ -73,5 +74,13 @@ public class Loan {
 
     public void setState(String v) {
         this.state = v;
+    }
+
+    public int getDaysActive() {
+        return daysActive;
+    }
+
+    public void setDaysActive(int v) {
+        this.daysActive = v;
     }
 }

@@ -111,4 +111,41 @@ public class LoanRepositoryImpl implements LoanRepository {
 
         return list;
     }
+
+    @Override
+    public List<Loan> findActiveLoansByUserEmail(String email) {
+        List<Loan> list = new ArrayList<>();
+
+        String sql
+                = "SELECT l.idLoan, l.idUser, l.idBook, l.loan_date, l.state, "
+                + "       u.email, b.title, "
+                + "       DATEDIFF(CURRENT_DATE, l.loan_date) AS days_active "
+                + "FROM Loan l "
+                + "INNER JOIN `User` u ON l.idUser = u.idUser "
+                + "INNER JOIN Book   b ON l.idBook  = b.idBook "
+                + "WHERE l.state = 'active' AND u.email = ? "
+                + "ORDER BY l.loan_date DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Loan loan = new Loan();
+                loan.setIdLoan(rs.getInt("idLoan"));
+                loan.setIdUser(rs.getInt("idUser"));
+                loan.setIdBook(rs.getInt("idBook"));
+                loan.setLoanDate(rs.getString("loan_date"));
+                loan.setState(rs.getString("state"));
+                loan.setUserEmail(rs.getString("email"));
+                loan.setBookTitle(rs.getString("title"));
+                loan.setDaysActive(rs.getInt("days_active")); // ← nuevo campo
+                list.add(loan);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding loans by user email", e);
+        }
+
+        return list;
+    }
 }

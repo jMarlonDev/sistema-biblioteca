@@ -11,4 +11,6 @@ public interface LoanRepository {
     void registerReturn(int idLoan);
 
     List<Loan> findActiveLoans();
+
+    List<Loan> findActiveLoansByUserEmail(String email); // ← nuevo
 }
