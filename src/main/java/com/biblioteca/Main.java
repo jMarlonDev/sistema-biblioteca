@@ -12,12 +12,14 @@ import com.biblioteca.controller.LoginController;
 import com.biblioteca.controller.RegisterController;
 import com.biblioteca.controller.ReportController;
 import com.biblioteca.controller.UserController;
+import com.biblioteca.controller.UserLoanController;
 import com.biblioteca.model.BookModel;
 import com.biblioteca.model.LibrarianModel;
 import com.biblioteca.model.LoanModel;
 import com.biblioteca.model.LoginModel;
 import com.biblioteca.model.RegisterModel;
 import com.biblioteca.model.ReportModel;
+import com.biblioteca.model.UserLoanModel;
 import com.biblioteca.model.UserModel;
 import com.biblioteca.repository.AdministratorRepositoryImpl;
 import com.biblioteca.repository.BookRepositoryImpl;
@@ -25,6 +27,7 @@ import com.biblioteca.repository.LibrarianRepositoryImpl;
 import com.biblioteca.repository.LoanRepositoryImpl;
 import com.biblioteca.repository.ReportRepositoryImpl;
 import com.biblioteca.repository.UserRepositoryImpl;
+import com.biblioteca.view.BookAvailabilityView;
 import com.biblioteca.view.BookManagementView;
 import com.biblioteca.view.LibrarianManagementView;
 import com.biblioteca.view.LoanManagementView;
@@ -32,7 +35,10 @@ import com.biblioteca.view.MainWindow;
 import com.biblioteca.view.MenuLibrarian;
 import com.biblioteca.view.ReportManagementView;
 import com.biblioteca.view.ReturnManagementView;
+import com.biblioteca.view.UserLoanView;
 import com.biblioteca.view.UserManagementView;
+import com.biblioteca.view.UserMenu;
+import com.biblioteca.view.UserReturnView;
 
 public class Main {
 
@@ -97,6 +103,24 @@ public class Main {
             mainWindow.getMenuLibrarian().addContentPanel(libReportView, MenuLibrarian.OPT_REPORTS);
 
             libLoanController.setReportController(libReportController);
+
+            // ── 16. Panel User: vistas ────────────────────────────
+            BookAvailabilityView availabilityView = new BookAvailabilityView();
+            UserLoanView userLoanView = new UserLoanView();
+            UserReturnView userReturnView = new UserReturnView();
+
+            UserLoanModel userLoanModel = new UserLoanModel(loanRepo, bookRepo, userRepo);
+
+// Email vacío al inicio — se rellena cuando el usuario hace login
+            UserLoanController userLoanController = new UserLoanController(
+                    availabilityView, userLoanView, userReturnView, userLoanModel, ""
+            );
+
+            mainWindow.getUserMenu().addContentPanel(availabilityView, UserMenu.OPT_AVAILABILITY);
+            mainWindow.getUserMenu().addContentPanel(userLoanView, UserMenu.OPT_BORROW);
+            mainWindow.getUserMenu().addContentPanel(userReturnView, UserMenu.OPT_RETURN);
+
+            mainWindow.setUserLoanController(userLoanController);
 
             new LoginController(
                     mainWindow.getFormLogin(),

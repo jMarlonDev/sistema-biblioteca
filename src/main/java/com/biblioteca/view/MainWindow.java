@@ -6,6 +6,8 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.biblioteca.controller.UserLoanController;
+
 public class MainWindow extends JFrame {
 
     public static final String VISTA_LOGIN = "login";
@@ -13,7 +15,8 @@ public class MainWindow extends JFrame {
     public static final String VISTA_ADMIN = "admin";
     public static final String VISTA_LIBRARIAN = "librarian";
     public static final String VISTA_USER = "user";
-
+    private UserLoanController userLoanController;
+    private final UserMenu userMenu;
     private final CardLayout viewDesign;
     private final JPanel mainContainer;
 
@@ -41,7 +44,8 @@ public class MainWindow extends JFrame {
         mainContainer.add(formRegister, VISTA_REGISTER);
         mainContainer.add(menuAdministrator, VISTA_ADMIN);
         mainContainer.add(menuLibrarian, VISTA_LIBRARIAN);
-        mainContainer.add(new UserMenu(), VISTA_USER);
+        userMenu = new UserMenu();
+        mainContainer.add(userMenu, VISTA_USER);
 
         this.add(mainContainer, BorderLayout.CENTER);
         this.setVisible(true);
@@ -65,5 +69,21 @@ public class MainWindow extends JFrame {
 
     public MenuLibrarian getMenuLibrarian() {
         return menuLibrarian;
+    }
+
+    public UserMenu getUserMenu() {
+        return userMenu;
+    }
+
+    public void initUserMenu(String userEmail) {
+        // Este método es llamado desde LoginController tras autenticar al usuario
+        // Los paneles ya están registrados en Main, solo refrescamos con el email
+        if (userLoanController != null) {
+            userLoanController.setUserEmail(userEmail);
+        }
+    }
+
+    public void setUserLoanController(UserLoanController controller) {
+        this.userLoanController = controller;
     }
 }
